@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Disqus Comment System
+Plugin Name: CF Custom - Disqus Comment System
 Plugin URI: http://disqus.com/
-Description: The Disqus comment system replaces your WordPress comment system with your comments hosted and powered by Disqus. Head over to the Comments admin page to set up your DISQUS Comment System.
+Description: The Disqus comment system replaces your WordPress comment system with your comments hosted and powered by Disqus. Head over to the Comments admin page to set up your DISQUS Comment System.  DO NOT UPDATE
 Author: Disqus <team@disqus.com>
-Version: 2.72
+Version: 2.72(cf)
 Author URI: http://disqus.com/
 */
 
@@ -349,8 +349,10 @@ function dsq_sync_comments($comments) {
         $comment_id = $commentdata['comment_ID'];
         update_comment_meta($comment_id, 'dsq_parent_post_id', $comment->parent_post);
         update_comment_meta($comment_id, 'dsq_post_id', $comment->id);
+        do_action('dsq_sync_comment', $comment, $commentdata);
     }
     unset($comment);
+
 
     if( isset($_POST['dsq_api_key']) && $_POST['dsq_api_key'] == get_option('disqus_api_key') ) {
         if( isset($_GET['dsq_sync_action']) && isset($_GET['dsq_sync_comment_id']) ) {
