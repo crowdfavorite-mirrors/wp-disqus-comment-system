@@ -1391,8 +1391,8 @@ function dsq_sso() {
         // use new style SSO
         $new = true;
     } else {
-        // sso is not configured
-        return array();
+        // sso is not configured via WordPress
+        return apply_filters('dq_custom_sso', array());
     }
     global $current_user, $dsq_api;
     get_currentuserinfo();
@@ -1431,15 +1431,18 @@ function dsq_sso_login() {
     $siteurl = site_url();
     $button = get_option('disqus_sso_button');
     $icon = get_option('disqus_sso_icon');
-    $sso_login_str = 'this.sso = {
-          name: "'.$sitename.'",
-          button: "'.$button.'",
-          icon: "'.$icon.'",
-          url: "'.$siteurl.'/wp-login.php",
-          logout: "'.$siteurl.'/wp-login.php?action=logout",
-          width: "800",
-          height: "700"
-    }';
+    $sso_login_obj = array(
+        "name" => $sitename,
+        "button" => $button,
+        "icon" => $icon,
+        "url" => "$siteurl/wp-login.php",
+        "logout" => "$siteurl/wp-login.php?action=logout",
+        "width" => "800",
+        "height" => "700",
+    );
+    $sso_login_obj = apply_filters('dq_sso_login_object', $sso_login_obj);
+    $sso_login_json = json_encode($sso_login_obj);
+    $sso_login_str = "this.sso = $sso_login_json";
     return $sso_login_str;
 }
 
