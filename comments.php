@@ -55,6 +55,9 @@ if (DISQUS_DEBUG) {
     var disqus_config = function () {
         var config = this; // Access to the config object
 
+		config.callbacks.onNewComment.push(function(comment) {
+			DGI.disqus_onNewComment(jQuery, comment);
+		});
         /*
            All currently supported events:
             * preData — fires just before we request for initial data
@@ -69,7 +72,8 @@ if (DISQUS_DEBUG) {
             document.getElementById(disqus_container_id).innerHTML = '';
         });
         <?php if (!get_option('disqus_manual_sync')): ?>
-        config.callbacks.onReady.push(function() {
+		config.callbacks.onReady.push(function() {
+			DGI.disqus_onReady(jQuery);
             // sync comments in the background so we don't block the page
             var script = document.createElement('script');
             script.async = true;
